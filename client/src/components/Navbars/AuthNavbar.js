@@ -74,7 +74,7 @@ class AdminNavbar extends React.Component {
                     <span className="nav-link-inner--text">Dashboard</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                {/* <NavItem>
                   <NavLink
                     className="nav-link-icon"
                     to="/auth/register"
@@ -83,7 +83,7 @@ class AdminNavbar extends React.Component {
                     <i className="ni ni-circle-08" />
                     <span className="nav-link-inner--text">Register</span>
                   </NavLink>
-                </NavItem>
+                </NavItem> */}
                 <NavItem>
                   <NavLink
                     className="nav-link-icon"
@@ -95,14 +95,14 @@ class AdminNavbar extends React.Component {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink
+                  {/* <NavLink
                     className="nav-link-icon"
                     to="/admin/user-profile"
                     tag={Link}
                   >
                     <i className="ni ni-single-02" />
                     <span className="nav-link-inner--text">Profile</span>
-                  </NavLink>
+                  </NavLink> */}
                 </NavItem>
               </Nav>
             </UncontrolledCollapse>
