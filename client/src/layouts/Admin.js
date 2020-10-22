@@ -16,24 +16,50 @@
 
 */
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
+import {connect} from "react-redux"
+import routes, { authRoutes} from "routes.js";
 
-import routes from "routes.js";
+import {loadUser} from "../action/authActions"
 
 class Admin extends React.Component {
-  componentDidUpdate(e) {
+
+//   constructor(props){
+//     super(props);
+
+// // this.props.loadUser()
+   
+//   }
+
+  // componentDidMount(){
+  //   const {type} = this.props.auth
+  //   console.log({user})
+  //   if (!user){
+  //     console.log("location no user ", window.location)
+  //     // window.location.href = "/auth/login"
+  //   }
+
+  // }
+  componentDidUpdate(prevProps) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.mainContent.scrollTop = 0;
+
+    const {type} = this.props.auth
+    console.log({type})
+    if(type == "AUTH_ERROR"){
+      this.props.history.push("/auth/login")
+    }
   }
-  getRoutes = routes => {
-    return routes.map((prop, key) => {
+  getRoutes = authRoutes => {
+    // console.log({authRoutes})
+    return authRoutes.map((prop, key) => {
       if (prop.layout === "/dashboard") {
         return (
           <Route
@@ -64,12 +90,12 @@ class Admin extends React.Component {
       <>
         <Sidebar
           {...this.props}
-          routes={routes}
-          logo={{
-            innerLink: "/dashboard/index",
-            imgSrc: require("assets/img/brand/argon-react.png"),
-            imgAlt: "..."
-          }}
+          routes={authRoutes}
+          // logo={{
+          //   innerLink: "/dashboard/index",
+          //   imgSrc: require("assets/img/brand/argon-react.png"),
+          //   imgAlt: "..."
+          // }}
         />
         <div className="main-content" ref="mainContent">
           <AdminNavbar
@@ -77,7 +103,7 @@ class Admin extends React.Component {
             brandText={this.getBrandText(this.props.location.pathname)}
           />
           <Switch>
-            {this.getRoutes(routes)}
+            {this.getRoutes(authRoutes)}
             <Redirect from="*" to="/dashboard/index" />
           </Switch>
           <Container fluid>
@@ -88,5 +114,9 @@ class Admin extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  error: state.error,
+});
 
-export default Admin;
+export default  withRouter (connect(mapStateToProps, {loadUser})(Admin));

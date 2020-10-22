@@ -36,8 +36,8 @@ else{
 // 
 
 export const loadUser = () => (dispatch, getState) => {
-  console.log("url ",   axios.defaults.baseURL)
-    // console.log("getting user")
+  // console.log("url ",   axios.defaults.baseURL)
+    console.log("getting user")
     // dispatch({type:USER_LOADING}) // dispatch user loading
 
     // user loading
@@ -69,7 +69,7 @@ export const loadUser = () => (dispatch, getState) => {
               type:AUTH_ERROR
           })
           // console.log("Eroor" , err.response.data)
-          console.clear()
+          // console.clear()
         
       })
     } catch(e){
@@ -111,7 +111,7 @@ export const login = ({email, password}) => dispatch => {
         )
                 .catch(err => {
 
-                  alert(err.response.data.msg)
+                  // alert(err.response.data.msg)
                     dispatch(
                         returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
                     )
@@ -123,7 +123,7 @@ export const login = ({email, password}) => dispatch => {
                       type:CLEAR_TYPE
                   })
 
-                  notifier.warning("Login Failed")
+                  notifier.warning(err.response.data.msg)
                 })
 }
 
@@ -138,6 +138,7 @@ export const clearType = () => dispatch => {
 // logout 
 export const logout = () => {
     // localStorage.removeItem('referral')
+    window.location.href = "/auth/login"
     return{
         type:LOGOUT_SUCCESS
     }

@@ -107,7 +107,7 @@ class Profile extends React.Component {
                   </Row>
                   <div className="text-center">
                     <h3>
-                      {user.name ? user.name : "User"}
+                      {user ? user.name : "User"}
                       <span className="font-weight-light">, 27</span>
                     </h3>
                     <div className="h5 font-weight-300">
@@ -169,7 +169,7 @@ class Profile extends React.Component {
                             </label>
                             <Input
                               className="form-control-alternative"
-                              defaultValue={user.name ? user.name : ""}
+                              defaultValue={user ? user.name : ""}
                               id="input-username"
                               placeholder="Username"
                               type="text"
@@ -187,7 +187,7 @@ class Profile extends React.Component {
                             <Input
                               className="form-control-alternative"
                               id="input-email"
-                              placeholder={user.email ? user.email : ""}
+                              placeholder={user ? user.email : ""}
                               type="email"
                             />
                           </FormGroup>
@@ -204,7 +204,7 @@ class Profile extends React.Component {
                             </label>
                             <Input
                               className="form-control-alternative"
-                              defaultValue={user.name ? user.name.split(" ")[0] : ""}
+                              defaultValue={user ? user.name.split(" ")[0] : ""}
                               id="input-first-name"
                               placeholder="First name"
                               type="text"
@@ -221,7 +221,7 @@ class Profile extends React.Component {
                             </label>
                             <Input
                               className="form-control-alternative"
-                              defaultValue={user.name ? user.name.split(" ")[1] : ""}
+                              defaultValue={user ? user.name.split(" ")[1] : ""}
                               id="input-last-name"
                               placeholder="Last name"
                               type="text"
@@ -247,7 +247,7 @@ class Profile extends React.Component {
                             </label>
                             <Input
                               className="form-control-alternative"
-                              defaultValue={user.address ? user.address : ""}
+                              defaultValue={user ? user.address : ""}
                               id="input-address"
                               placeholder="Home Address"
                               type="text"

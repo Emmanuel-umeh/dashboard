@@ -20,7 +20,7 @@ import {
      token:localStorage.getItem("token"),
      isAuthenticated:null,
      isLoading:false,
-     user:[],
+     user:null,
      profile:[],
      type:''
  }

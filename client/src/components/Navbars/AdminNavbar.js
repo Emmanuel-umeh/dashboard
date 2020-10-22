@@ -37,7 +37,7 @@ import {
 
 
 import {connect} from "react-redux"
-import {loadUser} from "../../action/authActions"
+import {loadUser, logout} from "../../action/authActions"
 class AdminNavbar extends React.Component {
   render() {
 
@@ -76,7 +76,7 @@ class AdminNavbar extends React.Component {
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
-                      {user.name ? user.name: ""}
+                      {user ? user.name: ""}
                       </span>
                     </Media>
                   </Media>
@@ -102,7 +102,11 @@ class AdminNavbar extends React.Component {
                     <span>Support</span>
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem href="#pablo" onClick={e => e.preventDefault()}>
+                  <DropdownItem href="#pablo" onClick={e => {
+                    e.preventDefault()
+                    this.props.logout()
+                    
+                    }}>
                     <i className="ni ni-user-run" />
                     <span>Logout</span>
                   </DropdownItem>
@@ -121,4 +125,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, {loadUser})(AdminNavbar);
+export default connect(mapStateToProps, {loadUser,logout})(AdminNavbar);

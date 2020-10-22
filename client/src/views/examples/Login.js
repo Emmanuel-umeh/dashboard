@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -38,6 +38,15 @@ import {
 import {connect} from "react-redux"
 import {login} from "../../action/authActions"
 class Login extends React.Component {
+
+//   componentDidMount(){
+//     const {user} = this.props.auth
+// // if(user){
+// //   this
+// // }
+// console.log({user})
+//   }
+
 
 
   _handleSubmit =(e)=>{
@@ -62,6 +71,12 @@ class Login extends React.Component {
 
   }
   render() {
+
+    // const {user} = this.props.auth
+    // if(user){
+    //   this.props.history.push("/auth/index")
+    // }
+    // console.log({user})
     return (
       <>
         <Col lg="5" md="7">
@@ -136,7 +151,7 @@ class Login extends React.Component {
                     className="custom-control-label"
                     htmlFor=" customCheckLogin"
                   >
-                    <span className="text-muted">Remember me</span>
+                    <span className="text-muted">Accept our terms and conditions</span>
                   </label>
                 </div>
                 <div className="text-center">
@@ -177,4 +192,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, {login})(Login);
+export default withRouter( connect(mapStateToProps, {login})(Login));
