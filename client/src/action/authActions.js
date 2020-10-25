@@ -84,10 +84,14 @@ export const login = ({ email, password, ref }) => (dispatch) => {
 
   // REQUEST BODY
   const body = JSON.stringify({ email, password });
+  
+  new AWN()
+  .asyncBlock(
   axios
     .post(`/api/auth/login`, body, config)
     .then(
       (res) => {
+        
         dispatch({
           type: LOGIN_SUCCESS,
           payload: res.data,
@@ -102,9 +106,13 @@ export const login = ({ email, password, ref }) => (dispatch) => {
         // console.log("login res ", res)
       }
       // console.log("this is the res ", res)
-    )
+    ),"Logged in Successfully",  'User Does Not Exists. Please Login With A Valid Account.')
     .catch((err) => {
       // alert(err.response.data.msg)
+
+      console.log("Erro !!!!!!!!!!1",err.response)
+
+      // notifier.warning(err.response.data.msg)
       dispatch(
         returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
       );
@@ -161,6 +169,9 @@ export const register = (
   });
   // console.log("registering individual")
   // console.log("consoling the body from register action ",body)
+  
+  new AWN()
+  .asyncBlock(
   axios
     .post("/api/auth/signup", body, config)
     .then((res) => {
@@ -172,7 +183,7 @@ export const register = (
       console.log("data ", res.data);
       // history.push('/dashboard')
       window.location.href = "/dashboard/index";
-    })
+    }), "Signed Up Successfully, Redirecting to Upload Video Page..", "User with this email already exists. Please Login")
     .catch((err) => {
       // notifier.warning("Registration failed")
       alert(err.response.data.msg);
@@ -212,6 +223,9 @@ export const registerWitness = (
   });
   // console.log("registering individual")
   // console.log("consoling the body from register action ",body)
+
+  new AWN()
+  .asyncBlock(
   axios
     .post("/api/auth/signup", body, config)
     .then((res) => {
@@ -225,7 +239,7 @@ export const registerWitness = (
 
       // ref is the id of the person you are a witness to
       window.location.href = `/upload/${ref}`;
-    })
+    }), "Signed Up Successfully, Redirecting to Upload Video Page..", "A User with this email already exists. Please login")
     .catch((err) => {
       notifier.warning(err.response.data.msg);
       // alert(err.response.data.msg)
@@ -272,7 +286,7 @@ export const witnessUpload = (fd) => (dispatch) => {
           );
         }, 1000);
       }),
-      "Redirecting to your dashboard.. "
+      "Redirecting to your dashboard.. ", "Uploading video failed. Please contact support"
     )
     .catch((err) => {
       // console.log("error ", err.response.data)
