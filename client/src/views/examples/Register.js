@@ -17,7 +17,7 @@
 */
 import React from "react";
 import {connect} from "react-redux"
-import {register} from "../../action/authActions"
+import {register,registerWitness} from "../../action/authActions"
 // reactstrap components
 import {
   Button,
@@ -33,8 +33,33 @@ import {
   Row,
   Col
 } from "reactstrap";
+import { withRouter } from "react-router-dom";
 
 class Register extends React.Component {
+  constructor(props){
+    super(props)
+
+
+    this.state ={
+      witness:false,
+      ref : null
+    }
+  }
+
+  componentDidMount(){
+
+    let ref = new URLSearchParams(window.location.search).get("ref");
+    // ref is the id of the user that will be a witness to
+    
+    if(ref){
+      console.log({ref})
+      this.setState({
+        witness:true,
+        ref:ref
+      })
+    }
+
+  }
 
   _handleSubmit =(e)=>{
     e.preventDefault()
@@ -51,12 +76,22 @@ class Register extends React.Component {
      return alert("Please Enter All Fields")
     }
 
+    var ref = this.state.ref
+
     const newUser = {
-      email, witnessEmail, phoneNumber, name, address,password
+      email, witnessEmail, phoneNumber, name, address,password,ref
     }
     // redux action here
     console.log({newUser})
-    this.props.register(newUser)
+// if he is not a witness register normally
+    if(!this.state.witness){
+      this.props.register(newUser)
+    }else{
+
+      // take to video upload page after registering
+      this.props.registerWitness(newUser)
+    }
+
 
   }
   render() {
@@ -167,10 +202,10 @@ class Register extends React.Component {
                   </InputGroup>
                 </FormGroup>
                 <div className="text-muted font-italic">
-                  <small>
+                  {/* <small>
                     password strength:{" "}
                     <span className="text-success font-weight-700">strong</span>
-                  </small>
+                  </small> */}
                 </div>
                 <Row className="my-4">
                   <Col xs="12">
@@ -201,6 +236,9 @@ class Register extends React.Component {
                 </div>
               </Form>
             </CardBody>
+         
+         
+         
           </Card>
         </Col>
       </>
@@ -214,4 +252,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, {register})(Register);
+export default  withRouter( connect(mapStateToProps, {register,registerWitness})(Register));

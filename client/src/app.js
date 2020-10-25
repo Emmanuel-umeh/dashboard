@@ -12,6 +12,7 @@ import AuthLayout from "layouts/Auth.js";
 //Utilities
 import PrivateRoute from './helpers/PrivateRoute';
 import PublicRoute from './helpers/PublicRoute';
+import UploadVideo from 'views/examples/upload';
 // import Index from './dashboard/index'
 
 
@@ -31,6 +32,8 @@ const App = () => {
   return (
     // <BrowserRouter>
     <Switch>
+
+<Route path="/upload/:id" render={props => <UploadVideo {...props} />} />
       <Route path="/dashboard" render={props => <AdminLayout {...props} />} />
       <Route path="/auth" render={props => <AuthLayout {...props} />} />
       <Redirect from="/" to="/dashboard/index" />

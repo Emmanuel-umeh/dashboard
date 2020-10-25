@@ -52,6 +52,9 @@ class Login extends React.Component {
   _handleSubmit =(e)=>{
     e.preventDefault()
     // console.log()
+    let ref = new URLSearchParams(window.location.search).get("ref");
+
+    console.log({ref})
     const email = this.email.value
    
     const password = this.password.value
@@ -63,7 +66,7 @@ class Login extends React.Component {
     }
 
     const newUser = {
-      email, password
+      email, password, ref
     }
     // redux action here
     console.log({newUser})
