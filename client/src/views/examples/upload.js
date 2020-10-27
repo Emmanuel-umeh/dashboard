@@ -33,6 +33,10 @@ var notifier = new AWN
         this.props.loadUser()
     }
 
+    state = {
+      auth_key : null
+    }
+
 
     componentDidUpdate(prevProps) {
         let id = this.props.match.params.id;
@@ -51,31 +55,44 @@ var notifier = new AWN
       }
     _handleUpload =(files)=>{
         let id = this.props.match.params.id;
+
+        if (!this.state.auth_key){
+        return  notifier.alert("Please Provide the Auth key Provided to You By The Person You Are A Witness Too")
+        }
         const {user} =this.props.auth   
         const fd= new FormData()
-        let s = this.props.match.params.id;
+        // let s = this.props.match.params.id;
         
         const file =  files[0]
         console.log({file})
 
         if(!file){
-            return alert("Please upload a video")
+            return notifier.alert("Please upload a video")
         }
         fd.append("file", file)
         fd.append("id", id)
         fd.append("email", user.email)
 
         fd.append("name", user.name)
+        fd.append("auth_key", this.state.auth_key)
 
-        console.log(user.email)
+        // console.log(user.email)
 
         this.props.witnessUpload(fd)
 
     }
+
+    auth_key =(e)=>{
+
+      console.log(e.target.value)
+      this.setState({
+        auth_key : e.target.value
+      })
+    }
       render(){
           return(
 
-<Video _handleUpload = {this._handleUpload} />
+<Video _handleUpload = {this._handleUpload} auth_key = {this.auth_key} />
           )
       }
   }
@@ -97,8 +114,8 @@ var notifier = new AWN
   return (
 
 
-    <>
-    <Col lg="12" md="8">
+    <center>
+    <Col lg="8" md="8">
       <Card className="bg-secondary shadow border-0">
         <CardHeader className="bg-transparent pb-5">
           <div className="text-muted text-center mt-2 mb-4">
@@ -137,6 +154,17 @@ var notifier = new AWN
         <ul>{files}</ul>
       </aside>
     {/* </div> */}
+
+    <FormGroup>
+                  <InputGroup className="input-group-alternative">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-lock-circle-open" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input onChange ={(e)=>props.auth_key(e)} placeholder="Enter Authentication Code Provided by voter" type="password" autoComplete="new-password"/>
+                  </InputGroup>
+                </FormGroup>
 
     </Card>
             </FormGroup>
@@ -179,7 +207,7 @@ var notifier = new AWN
      
       </Card>
     </Col>
-  </>
+  </center>
 
   );
 }

@@ -41,36 +41,69 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING }); // dispatch user loading
 
   // console.log("token config ", tokenConfig(getState))
-  try {
+  // try {
+
+    notifier.asyncBlock(
     axios
-      .get(`/api/auth/oneUser`, tokenConfig(getState))
-      .then((res) => {
-        if (res.data.message === "error") {
-          localStorage.removeItem("token");
+      .get(`/api/auth/oneUser`, tokenConfig(getState)),
+
+
+      resp =>{
+
+        console.log("resp !!" , resp)
+        dispatch({
+                  type: USER_LOADED,
+                  payload: resp.data,
+                });
+      },
+      /* omitted onResolve */
+       err =>{
+        console.log("err ", err.response.data);
+        localStorage.removeItem("token");
+
+        // window.location.href = "/login"
           return dispatch({
             type: AUTH_ERROR,
           });
-        }
-        // console.log("user data ", res)
-        dispatch({
-          type: USER_LOADED,
-          payload: res.data,
-        });
-        //  console
-      })
-      .catch((err) => {
-        dispatch({
-          type: AUTH_ERROR,
-        });
-        // console.log("Eroor" , err.response.data)
-        // console.clear()
-      });
-  } catch (e) {
-    if (e) {
-      console.clear();
-    }
-  }
-};
+
+
+  
+        
+        // notifier.alert(`${err.response.data.msg}`)
+      
+      }
+  
+      )
+
+}
+    
+  //     .then((res) => {
+  //       if (res.data.message === "error") {
+  //         localStorage.removeItem("token");
+  //         return dispatch({
+  //           type: AUTH_ERROR,
+  //         });
+  //       }
+  //       // console.log("user data ", res)
+  //       dispatch({
+  //         type: USER_LOADED,
+  //         payload: res.data,
+  //       });
+  //       //  console
+  //     })
+  //     .catch((err) => {
+  //       dispatch({
+  //         type: AUTH_ERROR,
+  //       });
+  //       // console.log("Eroor" , err.response.data)
+  //       // console.clear()
+  //     });
+  // } catch (e) {
+  //   if (e) {
+  //     console.clear();
+  //   }
+  // }
+// };
 
 // export const register =
 
@@ -82,50 +115,48 @@ export const login = ({ email, password, ref }) => (dispatch) => {
     },
   };
 
+
   // REQUEST BODY
   const body = JSON.stringify({ email, password });
+
+
+  notifier.asyncBlock(
+    axios
+    .post("/api/auth/login", body, config),
+    resp =>{
+
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: resp.data
+      })
+
   
-  new AWN()
-  .asyncBlock(
-  axios
-    .post(`/api/auth/login`, body, config)
-    .then(
-      (res) => {
-        
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: res.data,
-        });
 
-        if (ref) {
-          window.location.href = `/upload/${ref}`;
-        }
-
-        window.location.href = "/dashboard/index";
-
-        // console.log("login res ", res)
+      if (ref) {
+        return window.location.href = `/upload/${ref}`;
       }
-      // console.log("this is the res ", res)
-    ),"Logged in Successfully",  'User Does Not Exists. Please Login With A Valid Account.')
-    .catch((err) => {
-      // alert(err.response.data.msg)
 
-      console.log("Erro !!!!!!!!!!1",err.response)
+      window.location.href = "/dashboard/index";
 
-      // notifier.warning(err.response.data.msg)
+    },
+    /* omitted onResolve */
+     err =>{
+      console.log("err ", err.response.data);
+      // notifier.warning("Registration failed")
+      // alert(err.response.data.msg);
       dispatch(
         returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
       );
+      console.log(err.response.data);
       dispatch({
-        type: LOGIN_FAIL,
+        type: REGISTER_FAIL,
       });
 
-      dispatch({
-        type: CLEAR_TYPE,
-      });
+      
+      notifier.alert(`${err.response.data.msg}`)}
 
-      notifier.warning(err.response.data.msg);
-    });
+    )
+  
 };
 
 export const clearType = () => (dispatch) => {
@@ -145,48 +176,39 @@ export const logout = () => {
 
 // Register User
 export const register = (
-  { name, email, password, address, phoneNumber, witnessEmail },
+  fd,ref,
   history
 ) => (dispatch) => {
   // Headers
   const config = {
     headers: {
       // 'Accept': 'application/json',
-      "Content-Type": "application/json",
+      'Content-Type': 'multipart/form-data',
     },
   };
 
-  // console.log(config)
-
-  // Request body
-  const body = JSON.stringify({
-    name,
-    email,
-    password,
-    address,
-    phoneNumber,
-    witnessEmail,
-  });
   // console.log("registering individual")
   // console.log("consoling the body from register action ",body)
   
-  new AWN()
-  .asyncBlock(
-  axios
-    .post("/api/auth/signup", body, config)
-    .then((res) => {
+  // new AWN()
+  // .asyncBlock(
+    notifier.asyncBlock(
+    axios
+    .post("/api/auth/signup", fd, config),
+    resp =>{
+
       dispatch({
         type: REGISTER_SUCCESS,
-        payload: res.data,
-      });
+        payload: resp.data
+      })
 
-      console.log("data ", res.data);
-      // history.push('/dashboard')
-      window.location.href = "/dashboard/index";
-    }), "Signed Up Successfully, Redirecting to Upload Video Page..", "User with this email already exists. Please Login")
-    .catch((err) => {
+      window.location.href = "/dashboard/index"
+    },
+    /* omitted onResolve */
+     err =>{
+      console.log("err ", err.response.data);
       // notifier.warning("Registration failed")
-      alert(err.response.data.msg);
+      // alert(err.response.data.msg);
       dispatch(
         returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
       );
@@ -194,55 +216,73 @@ export const register = (
       dispatch({
         type: REGISTER_FAIL,
       });
-    });
+
+      
+      notifier.alert(`${err.response.data.msg}`)}
+
+    )
+  // axios
+  //   .post("/api/auth/signup", body, config)
+  //   .then((res) => {
+  //     dispatch({
+  //       type: REGISTER_SUCCESS,
+  //       payload: res.data,
+  //     });
+
+     
+  //     // history.push('/dashboard')
+  //     window.location.href = "/dashboard/index";
+  //   }).catch((err) => {
+
+  //     console.log("err ", err.response.data);
+  //     // notifier.warning("Registration failed")
+  //     // alert(err.response.data.msg);
+  //     dispatch(
+  //       returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
+  //     );
+  //     console.log(err.response.data);
+  //     dispatch({
+  //       type: REGISTER_FAIL,
+  //     });
+
+  //     return notifier.warning(err.response.data.msg)
+  //   })
+    
+    
 };
 
 // Register User
 export const registerWitness = (
-  { name, email, password, address, phoneNumber, witnessEmail, ref },
+   fd,
+   ref,
   history
 ) => (dispatch) => {
   // Headers
   const config = {
     headers: {
       // 'Accept': 'application/json',
-      "Content-Type": "application/json",
+      'Content-Type': 'multipart/form-data',
     },
   };
 
-  // console.log(config)
 
-  // Request body
-  const body = JSON.stringify({
-    name,
-    email,
-    password,
-    address,
-    phoneNumber,
-    witnessEmail,
-  });
-  // console.log("registering individual")
-  // console.log("consoling the body from register action ",body)
-
-  new AWN()
-  .asyncBlock(
-  axios
-    .post("/api/auth/signup", body, config)
-    .then((res) => {
+  notifier.asyncBlock(
+    axios
+    .post("/api/auth/signup", fd, config),
+    resp =>{
       dispatch({
         type: REGISTER_SUCCESS,
-        payload: res.data,
-      });
+        payload: resp.data
+      })
 
-      console.log("data ", res.data);
-      // history.push('/dashboard')
 
-      // ref is the id of the person you are a witness to
       window.location.href = `/upload/${ref}`;
-    }), "Signed Up Successfully, Redirecting to Upload Video Page..", "A User with this email already exists. Please login")
-    .catch((err) => {
-      notifier.warning(err.response.data.msg);
-      // alert(err.response.data.msg)
+    },
+    /* omitted onResolve */
+     err =>{
+      console.log("err ", err.response.data);
+      // notifier.warning("Registration failed")
+      // alert(err.response.data.msg);
       dispatch(
         returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
       );
@@ -250,7 +290,12 @@ export const registerWitness = (
       dispatch({
         type: REGISTER_FAIL,
       });
-    });
+
+      
+      notifier.alert(`${err.response.data.msg}`)}
+
+    )
+
 };
 
 export const witnessUpload = (fd) => (dispatch) => {
@@ -261,48 +306,38 @@ export const witnessUpload = (fd) => (dispatch) => {
       "Content-Type": "multipart/form-data",
     },
   };
-  new AWN()
-    .asyncBlock(
-      axios.post("/api/witness/upload", fd, config).then((res) => {
-        // dispatch({
-        //   type: VIDEO_UPLOADED,
-        //   payload: res.data
-        // })
-        if (!res) {
-         alert(
-            "SOmething went wrong. Please Contact customer care via email at verify@baevo.org"
-          );
-        }
 
-        console.log("data", res.data);
 
-        setTimeout(() => {
-          window.location.href = `/dashboard`;
-        }, 4000);
 
-        setTimeout(() => {
-          notifier.info(
-            "Your Video Has Been Sent Successfully. Thanks For Being a Witness. "
-          );
-        }, 1000);
-      }),
-      "Redirecting to your dashboard.. ", "Uploading video failed. Please contact support"
-    )
-    .catch((err) => {
-      // console.log("error ", err.response.data)
+  
+  notifier.asyncBlock(
+    axios
+    .post("/api/witness/upload", fd, config),
+    resp =>{
+
+      notifier.info(
+        "Your Video Has Been Sent Successfully. Thanks For Being a Witness. "
+      );
+setTimeout(() => {
+  window.location.href = `/dashboard`;
+}, 2000);
+    
+    },
+    /* omitted onResolve */
+     err =>{
+      console.log("err ", err.response.data);
+      // notifier.alert(err.response.data.msg)
+      notifier.alert(`${err.response.data.msg}`)
+      // alert(err.response.data.msg);
       dispatch(
-        returnErrors(
-          err.response.data,
-          err.response.status,
-          "VIDEO_UPLOAD_FAILED"
-        )
+        returnErrors(err.response.data, err.response.status,  "VIDEO_UPLOAD_FAILED")
       );
 
-      alert("Something went wrong")
-     alert(
-      err.response.data.msg
-      );
-    });
+      
+    }
+
+    )
+
 };
 
 // Setup config/headers and token

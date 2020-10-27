@@ -36,16 +36,20 @@ import {
 
 
 import {connect} from "react-redux"
-import {login} from "../../action/authActions"
+import {login, loadUser} from "../../action/authActions"
+
+import AWN from "awesome-notifications"
+let notifier = new AWN
 class Login extends React.Component {
 
-//   componentDidMount(){
-//     const {user} = this.props.auth
-// // if(user){
-// //   this
-// // }
+  componentDidMount(){
+    // const {user} = this.props.auth
+    this.props.loadUser()
+// if(user){
+//   this
+// }
 // console.log({user})
-//   }
+  }
 
 
 
@@ -55,6 +59,9 @@ class Login extends React.Component {
     let ref = new URLSearchParams(window.location.search).get("ref");
 
     console.log({ref})
+    // if(ref){
+    //   alert(ref)
+    // }
     const email = this.email.value
    
     const password = this.password.value
@@ -62,7 +69,7 @@ class Login extends React.Component {
 
 
     if(!email ||!password){
-     return alert("Please Enter All Fields")
+     return notifier.alert("Please Enter All Fields")
     }
 
     const newUser = {
@@ -86,42 +93,15 @@ class Login extends React.Component {
           <Card className="bg-secondary shadow border-0">
             <CardHeader className="bg-transparent pb-5">
               <div className="text-muted text-center mt-2 mb-3">
-                <small>Sign in with</small>
+                <h2>Don't Have An Account?</h2>
               </div>
               <div className="btn-wrapper text-center">
-                <Button
-                  className="btn-neutral btn-icon"
-                  color="default"
-                  href="#pablo"
-                  onClick={e => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/github.svg")}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Github</span>
-                </Button>
-                <Button
-                  className="btn-neutral btn-icon"
-                  color="default"
-                  href="#pablo"
-                  onClick={e => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/google.svg")}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Google</span>
-                </Button>
+              <Link to ="/auth/register"><h4 style ={{color : "blue"}}> Create new account</h4></Link>
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small>Or sign in with credentials</small>
+                <h2>Or sign in with credentials</h2>
               </div>
               <Form role="form">
                 <FormGroup className="mb-3">
@@ -175,7 +155,7 @@ class Login extends React.Component {
                 <small>Forgot password?</small>
               </a>
             </Col>
-            <Col className="text-right" xs="6">
+            {/* <Col className="text-right" xs="6">
               <a
                 className="text-light"
                 href="#pablo"
@@ -183,7 +163,7 @@ class Login extends React.Component {
               >
                 <Link to ="/auth/register"><small>Create new account</small></Link>
               </a>
-            </Col>
+            </Col> */}
           </Row>
         </Col>
       </>
@@ -195,4 +175,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default withRouter( connect(mapStateToProps, {login})(Login));
+export default withRouter( connect(mapStateToProps, {login,loadUser})(Login));

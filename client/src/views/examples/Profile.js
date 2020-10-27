@@ -73,7 +73,7 @@ class Profile extends React.Component {
                       onClick={e => e.preventDefault()}
                       size="sm"
                     >
-                      Connect
+                      {user && user.verified ? "Verified" : "Not Verified"}
                     </Button>
                     <Button
                       className="float-right"
@@ -123,12 +123,25 @@ class Profile extends React.Component {
                       University of Computer Science
                     </div>
                     <hr className="my-4" />
-                    <p>
-                      Passionate developer and entrepreneur
-                    </p>
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
+                    <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-username"
+                            >
+                              Authorization Key
+                            </label>
+                            <Input
+                              className="form-control-alternative"
+                              defaultValue={user && user.verificationCode}
+                              id="input-username"
+                              disabled
+                              placeholder="Username"
+                              type="text"
+                            />
+                          </FormGroup>
+                    {/* <a href="#pablo" onClick={e => e.preventDefault()}>
                       Show more
-                    </a>
+                    </a> */}
                   </div>
                 </CardBody>
               </Card>
@@ -200,7 +213,7 @@ class Profile extends React.Component {
                               className="form-control-label"
                               htmlFor="input-first-name"
                             >
-                              First name
+                      First name
                             </label>
                             <Input
                               className="form-control-alternative"
@@ -256,7 +269,7 @@ class Profile extends React.Component {
                         </Col>
                       </Row>
                       <Row>
-                        <Col lg="4">
+                        <Col lg="8">
                           <FormGroup>
                             <label
                               className="form-control-label"
@@ -308,21 +321,7 @@ class Profile extends React.Component {
                         </Col>
                       </Row>
                     </div>
-                    <hr className="my-4" />
-                    {/* Description */}
-                    <h6 className="heading-small text-muted mb-4">About me</h6>
-                    <div className="pl-lg-4">
-                      <FormGroup>
-                        <label>About Me</label>
-                        <Input
-                          className="form-control-alternative"
-                          placeholder="A few words about you ..."
-                          rows="4"
-                          defaultValue="A beautiful Dashboard you, Enjoy..."
-                          type="textarea"
-                        />
-                      </FormGroup>
-                    </div>
+                
                   </Form>
                 </CardBody>
               </Card>

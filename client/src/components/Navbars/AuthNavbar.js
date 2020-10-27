@@ -32,6 +32,7 @@ import {
 
 class AdminNavbar extends React.Component {
   render() {
+    let ref = new URLSearchParams(window.location.search).get("ref");
     return (
       <>
         <Navbar
@@ -74,10 +75,12 @@ class AdminNavbar extends React.Component {
                     <span className="nav-link-inner--text">Dashboard</span>
                   </NavLink>
                 </NavItem> */}
+
+                
                 <NavItem>
                   <NavLink
                     className="nav-link-icon"
-                    to="/auth/register"
+                    to={!ref  ? "/auth/register" :`/auth/register?ref=${ref}` }
                     tag={Link}
                   >
                     <i className="ni ni-circle-08" />
@@ -87,7 +90,7 @@ class AdminNavbar extends React.Component {
                 <NavItem>
                   <NavLink
                     className="nav-link-icon"
-                    to="/auth/login"
+                    to={!ref  ? "/auth/login" :`/auth/login?ref=${ref}` }
                     tag={Link}
                   >
                     <i className="ni ni-key-25" />

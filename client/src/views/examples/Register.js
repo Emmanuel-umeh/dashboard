@@ -18,6 +18,8 @@
 import React from "react";
 import {connect} from "react-redux"
 import {register,registerWitness} from "../../action/authActions"
+import ImageUploader from 'react-images-upload';
+ 
 // reactstrap components
 import {
   Button,
@@ -33,8 +35,11 @@ import {
   Row,
   Col
 } from "reactstrap";
+import AWN from "awesome-notifications"
 import { withRouter } from "react-router-dom";
 
+
+let notifier = new AWN
 class Register extends React.Component {
   constructor(props){
     super(props)
@@ -42,9 +47,18 @@ class Register extends React.Component {
 
     this.state ={
       witness:false,
-      ref : null
+      ref : null,
+      pictures: [] 
     }
   }
+
+  onDrop = (picture) => {
+    console.log({picture})
+    this.setState({
+        pictures: this.state.pictures.concat(picture),
+    });
+}
+
 
   componentDidMount(){
 
@@ -63,33 +77,40 @@ class Register extends React.Component {
 
   _handleSubmit =(e)=>{
     e.preventDefault()
-    // console.log()
+    const fd = new FormData()
     const email = this.email.value
     const witnessEmail = this.witnessEmail.value
     const phoneNumber = this.phoneNumber.value
     const name = this.name.value
     const password = this.password.value
     const address = this.address.value
+ 
 
-
-    if(!email ||!witnessEmail ||!phoneNumber||!name ||!address||!password){
-     return alert("Please Enter All Fields")
+console.log(this.state.pictures.length)
+    if(!email ||!witnessEmail ||!phoneNumber||!name ||!address||!password ||this.state.pictures.length == 0){
+     return notifier.alert("Please Enter All Fields")
     }
 
+
+        // console.log()
+   
     var ref = this.state.ref
+    fd.append("file", this.state.pictures[0])
+    fd.append("email", this.email.value)
+    fd.append("witnessEmail",this.witnessEmail.value)
+    fd.append("phoneNumber", this.phoneNumber.value)
+    fd.append("name",  this.name.value)
+    fd.append("password",this.password.value)
+    fd.append("address", this.address.value)
 
-    const newUser = {
-      email, witnessEmail, phoneNumber, name, address,password,ref
-    }
-    // redux action here
-    console.log({newUser})
+
 // if he is not a witness register normally
     if(!this.state.witness){
-      this.props.register(newUser)
+      this.props.register(fd,ref)
     }else{
 
       // take to video upload page after registering
-      this.props.registerWitness(newUser)
+      this.props.registerWitness(fd,ref)
     }
 
 
@@ -99,44 +120,9 @@ class Register extends React.Component {
       <>
         <Col lg="6" md="8">
           <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-5">
-              <div className="text-muted text-center mt-2 mb-4">
-                <small>Sign up with</small>
-              </div>
-              <div className="text-center">
-                <Button
-                  className="btn-neutral btn-icon mr-4"
-                  color="default"
-                  href="#pablo"
-                  onClick={e => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/github.svg")}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Github</span>
-                </Button>
-                <Button
-                  className="btn-neutral btn-icon"
-                  color="default"
-                  href="#pablo"
-                  onClick={e => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/google.svg")}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Google</span>
-                </Button>
-              </div>
-            </CardHeader>
-            <CardBody className="px-lg-5 py-lg-5">
+         <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small>Or sign up with credentials</small>
+                <h2>Sign up with credentials</h2>
               </div>
               <Form role="form" onSubmit ={this._handleSubmit}>
                 <FormGroup>
@@ -200,6 +186,16 @@ class Register extends React.Component {
                     </InputGroupAddon>
                     <Input placeholder="Password"  innerRef ={(ref)=>this.password = ref} required type="password" autoComplete="password"/>
                   </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                <ImageUploader
+                withIcon={true}
+                buttonText='Upload a Clear Profile Picture'
+                onChange={this.onDrop}
+                withPreview = {true}
+                imgExtension={['.jpg', '.jpeg', '.png', '.gif']}
+                maxFileSize={5242880}
+            />
                 </FormGroup>
                 <div className="text-muted font-italic">
                   {/* <small>
