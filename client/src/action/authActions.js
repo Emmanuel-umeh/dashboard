@@ -28,7 +28,7 @@ if (location.slice(0, 17) == "http://localhost:") {
 } else if (location.slice(0, 17) == "http://127.0.0.1:") {
   axios.defaults.baseURL = "http://localhost:5200";
 } else {
-  axios.defaults.baseURL = "https://deplomat-api.herokuapp.com/";
+  axios.defaults.baseURL = "https://deplomat-api.herokuapp.com";
 }
 //
 

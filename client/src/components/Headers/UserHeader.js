@@ -33,7 +33,8 @@ class UserHeader extends React.Component {
           style={{
             minHeight: "600px",
             backgroundImage:
-              "url(" + require("assets/img/theme/profile-cover.jpg") + ")",
+            !user ? 
+              "url(" + require("assets/img/theme/profile-cover.jpg") + ")" :   "url(" + user.profilePicture + ")" ,
             backgroundSize: "cover",
             backgroundPosition: "center top"
           }}

@@ -69,10 +69,24 @@ class AdminNavbar extends React.Component {
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
                     <span className="avatar avatar-sm rounded-circle">
-                      <img
-                        alt="..."
-                        src={require("assets/img/theme/team-4-800x800.jpg")}
-                      />
+               
+
+{user ? (
+                          <img
+                            alt="..."
+                            className="rounded-circle"
+                           style={{
+                             height:40
+                           }}
+                            src={user.profilePicture}
+                          />
+                        ) : (
+                          <img
+                            alt="..."
+                            className="rounded-circle"
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
+                          />
+                        )}
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
@@ -85,18 +99,18 @@ class AdminNavbar extends React.Component {
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <DropdownItem to="/dashboard/user-profile" tag={Link}>
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  {/* <DropdownItem to="/admin/user-profile" tag={Link}>
                     <i className="ni ni-settings-gear-65" />
                     <span>Settings</span>
                   </DropdownItem>
                   <DropdownItem to="/admin/user-profile" tag={Link}>
                     <i className="ni ni-calendar-grid-58" />
                     <span>Activity</span>
-                  </DropdownItem>
+                  </DropdownItem> */}
                   <DropdownItem to="/admin/user-profile" tag={Link}>
                     <i className="ni ni-support-16" />
                     <span>Support</span>

@@ -84,13 +84,16 @@ class Register extends React.Component {
     const name = this.name.value
     const password = this.password.value
     const address = this.address.value
- 
+ const confirm_password = this.confirm_password.value
 
 console.log(this.state.pictures.length)
-    if(!email ||!witnessEmail ||!phoneNumber||!name ||!address||!password ||this.state.pictures.length == 0){
+    if(!email ||!witnessEmail ||!phoneNumber||!name ||!address||!password ||!confirm_password ||this.state.pictures.length == 0){
      return notifier.alert("Please Enter All Fields")
     }
 
+    if(password != confirm_password){
+      return notifier.alert("Passwords do not match")
+    }
 
         // console.log()
    
@@ -185,6 +188,16 @@ console.log(this.state.pictures.length)
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input placeholder="Password"  innerRef ={(ref)=>this.password = ref} required type="password" autoComplete="password"/>
+                  </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                  <InputGroup className="input-group-alternative">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-lock-circle-open" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input placeholder="Confirm Password"  innerRef ={(ref)=>this.confirm_password = ref} required type="password" autoComplete="password"/>
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>

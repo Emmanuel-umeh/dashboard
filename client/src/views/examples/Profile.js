@@ -28,21 +28,22 @@ import {
   Input,
   Container,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 // core components
 import UserHeader from "components/Headers/UserHeader.js";
-import {connect} from "react-redux"
-import {loadUser} from "../../action/authActions"
+import { connect } from "react-redux";
+import { loadUser } from "../../action/authActions";
+import AWN from "awesome-notifications";
 
+let notifier = new AWN();
 class Profile extends React.Component {
-
-  componentDidMount(){
-    this.props.loadUser()
+  componentDidMount() {
+    this.props.loadUser();
   }
   render() {
-    const {user} = this.props.auth
- 
+    const { user } = this.props.auth;
+
     return (
       <>
         <UserHeader />
@@ -54,12 +55,23 @@ class Profile extends React.Component {
                 <Row className="justify-content-center">
                   <Col className="order-lg-2" lg="3">
                     <div className="card-profile-image">
-                      <a href="#pablo" onClick={e => e.preventDefault()}>
-                        <img
-                          alt="..."
-                          className="rounded-circle"
-                          src={require("assets/img/theme/team-4-800x800.jpg")}
-                        />
+                      <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                        {user ? (
+                          <img
+                            alt="..."
+                            className="rounded-circle"
+                            style= {{
+                              height : 200
+                            }}
+                            src={user.profilePicture}
+                          />
+                        ) : (
+                          <img
+                            alt="..."
+                            className="rounded-circle"
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
+                          />
+                        )}
                       </a>
                     </div>
                   </Col>
@@ -70,7 +82,7 @@ class Profile extends React.Component {
                       className="mr-4"
                       color="info"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={(e) => e.preventDefault()}
                       size="sm"
                     >
                       {user && user.verified ? "Verified" : "Not Verified"}
@@ -79,7 +91,10 @@ class Profile extends React.Component {
                       className="float-right"
                       color="default"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        notifier.info("Functionality coming soon");
+                      }}
                       size="sm"
                     >
                       Message
@@ -91,16 +106,16 @@ class Profile extends React.Component {
                     <div className="col">
                       <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                         <div>
-                          <span className="heading">22</span>
-                          <span className="description">Friends</span>
+                          {/* <span className="heading">22</span>
+                          <span className="description">Friends</span> */}
                         </div>
                         <div>
-                          <span className="heading">10</span>
-                          <span className="description">Photos</span>
+                          {/* <span className="heading">10</span>
+                          <span className="description">Photos</span> */}
                         </div>
                         <div>
-                          <span className="heading">89</span>
-                          <span className="description">Comments</span>
+                          {/* <span className="heading">89</span>
+                          <span className="description">Comments</span> */}
                         </div>
                       </div>
                     </div>
@@ -108,37 +123,37 @@ class Profile extends React.Component {
                   <div className="text-center">
                     <h3>
                       {user ? user.name : "User"}
-                      <span className="font-weight-light">, 27</span>
+                      {/* <span className="font-weight-light">, 27</span> */}
                     </h3>
                     <div className="h5 font-weight-300">
                       <i className="ni location_pin mr-2" />
-                     Abuja, Nigeria
+                      Abuja, Nigeria
                     </div>
                     <div className="h5 mt-4">
                       <i className="ni business_briefcase-24 mr-2" />
-                      Developer
+                      Address
                     </div>
                     <div>
                       <i className="ni education_hat mr-2" />
-                      University of Computer Science
+                      {user && user.address}
                     </div>
                     <hr className="my-4" />
                     <FormGroup>
-                            <label
-                              className="form-control-label"
-                              htmlFor="input-username"
-                            >
-                              Authorization Key
-                            </label>
-                            <Input
-                              className="form-control-alternative"
-                              defaultValue={user && user.verificationCode}
-                              id="input-username"
-                              disabled
-                              placeholder="Username"
-                              type="text"
-                            />
-                          </FormGroup>
+                      <label
+                        className="form-control-label"
+                        htmlFor="input-username"
+                      >
+                        Authorization Key
+                      </label>
+                      <Input
+                        className="form-control-alternative"
+                        defaultValue={user && user.verificationCode}
+                        id="input-username"
+                        disabled
+                        placeholder="Username"
+                        type="text"
+                      />
+                    </FormGroup>
                     {/* <a href="#pablo" onClick={e => e.preventDefault()}>
                       Show more
                     </a> */}
@@ -157,10 +172,10 @@ class Profile extends React.Component {
                       <Button
                         color="primary"
                         href="#pablo"
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                         size="sm"
                       >
-                        Settings
+                        Update Profile
                       </Button>
                     </Col>
                   </Row>
@@ -213,7 +228,7 @@ class Profile extends React.Component {
                               className="form-control-label"
                               htmlFor="input-first-name"
                             >
-                      First name
+                              First name
                             </label>
                             <Input
                               className="form-control-alternative"
@@ -309,19 +324,19 @@ class Profile extends React.Component {
                               className="form-control-label"
                               htmlFor="input-country"
                             >
-                              Postal code
+                              Phone Number
                             </label>
                             <Input
                               className="form-control-alternative"
                               id="input-postal-code"
-                              placeholder="Postal code"
+                              defaultValue={user ? user.phoneNumber : ""}
+                              placeholder="Phone Number"
                               type="number"
                             />
                           </FormGroup>
                         </Col>
                       </Row>
                     </div>
-                
                   </Form>
                 </CardBody>
               </Card>
@@ -337,4 +352,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, {loadUser})(Profile);
+export default connect(mapStateToProps, { loadUser })(Profile);
