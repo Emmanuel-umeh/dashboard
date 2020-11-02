@@ -20,7 +20,7 @@ import React from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
-
+import {connect} from "react-redux"
 // reactstrap components
 import {
   Button,
@@ -110,6 +110,8 @@ class Sidebar extends React.Component {
         target: "_blank"
       };
     }
+
+    const {user} =this.props.auth
     return (
       <Navbar
         className="navbar-vertical fixed-left navbar-light bg-white"
@@ -156,10 +158,22 @@ class Sidebar extends React.Component {
               <DropdownToggle nav>
                 <Media className="align-items-center">
                   <span className="avatar avatar-sm rounded-circle">
+
+                    {user && user.profilePicture ? 
+                     <img
+                     alt="..."
+                     style={{
+                      height:40
+                    }}
+                     src={user.profilePicture}
+                   />
+                    : 
+                    
                     <img
-                      alt="..."
-                      src={require("assets/img/theme/team-1-800x800.jpg")}
-                    />
+                    alt="..."
+                    src={require("assets/img/theme/team-1-800x800.jpg")}
+                  />}
+                   
                   </span>
                 </Media>
               </DropdownToggle>
@@ -299,5 +313,9 @@ Sidebar.propTypes = {
     imgAlt: PropTypes.string.isRequired
   })
 };
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  error: state.error,
+});
 
-export default Sidebar;
+export default   connect(mapStateToProps, {})(Sidebar);

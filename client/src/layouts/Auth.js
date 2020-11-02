@@ -58,9 +58,9 @@ class Auth extends React.Component {
               <div className="header-body text-center mb-7">
                 <Row className="justify-content-center">
                   <Col lg="5" md="6">
-                    <h1 className="text-white">Welcome to Deplomat Day!</h1>
+                    <h1 className="text-white">Welcome to Baevo</h1>
                     <p className="text-lead text-light">
-                      Fill in the form below to join us
+                      Fill in the form below to ratify the declaration.
                     </p>
                   </Col>
                 </Row>
